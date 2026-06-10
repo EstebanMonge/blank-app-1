@@ -22,45 +22,102 @@ characters = {
         "votes": 0,
     },
 }
+# -----------------------------
+# SESSION STATE INIT
+# -----------------------------
+if "step" not in st.session_state:
+    st.session_state.step = "form"
 
 if "current_index" not in st.session_state:
     st.session_state.current_index = 0
 
 if "results" not in st.session_state:
-    st.session_state.results = {}
+    st.session_state.results = []
 
+# -----------------------------
+# FORMULARIO DE USUARIO
+# -----------------------------
 st.title("Votappcion")
-st.write(
-    "Bienvenido a Votappcion la aplicación para escoger al mejor"
-)
 
-keys = list(characters.keys())
+if st.session_state.step == "form":
 
-if st.session_state.current_index < len(keys):
+    st.write("Ingresa tus datos para votar")
 
-    current_key = keys[st.session_state.current_index]
-    current_character = characters[current_key]
+    cedula = st.text_input("Cédula")
+    nombre = st.text_input("Nombre")
+    apellido = st.text_input("Apellido")
 
-    st.write("¿Vota por?")
-    st.subheader(current_character["name"])
-    st.image(current_character["image"])
+    if st.button("Iniciar votación"):
+        if cedula and nombre and apellido:
+            st.session_state.user = {
+                "cedula": cedula,
+                "nombre": nombre,
+                "apellido": apellido,
+            }
+            st.session_state.step = "votacion"
+            st.rerun()
+        else:
+            st.warning("Completa todos los campos")
 
-    col1, col2 = st.columns(2)
+# -----------------------------
+# VOTACIÓN
+# -----------------------------
+elif st.session_state.step == "votacion":
 
-    with col1:
-        if st.button("Sí"):
-            st.session_state.results[current_key] = True
-            st.session_state.current_index += 1
+    keys = list(characters.keys())
+
+    if st.session_state.current_index < len(keys):
+
+        key = keys[st.session_state.current_index]
+        character = characters[key]
+
+        st.write(f"Votando como: {st.session_state.user['nombre']} {st.session_state.user['apellido']}")
+
+        st.subheader(character["name"])
+        st.image(character["image"])
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if st.button("Sí"):
+                st.session_state.results.append({
+                    "user": st.session_state.user,
+                    "character": key,
+                    "vote": True
+                })
+                st.session_state.current_index += 1
+                st.rerun()
+
+        with col2:
+            if st.button("No"):
+                st.session_state.results.append({
+                    "user": st.session_state.user,
+                    "character": key,
+                    "vote": False
+                })
+                st.session_state.current_index += 1
+                st.rerun()
+
+    else:
+        st.success("Terminaste la votación de este usuario")
+
+        if st.button("Ver resultados"):
+            st.session_state.step = "results"
             st.rerun()
 
-    with col2:
-        if st.button("No"):
-            st.session_state.results[current_key] = False
-            st.session_state.current_index += 1
-            st.rerun()
+# -----------------------------
+# RESULTADOS
+# -----------------------------
+elif st.session_state.step == "results":
 
-else:
-    st.success("Ya votaste por todos los personajes.")
+    st.write("## Resultados")
 
-if st.button("Ver resultados"):
-    st.write(st.session_state.results)
+    for r in st.session_state.results:
+        user = r["user"]
+        character = characters[r["character"]]
+        vote = "Sí" if r["vote"] else "No"
+
+        st.write(
+            f"{user['nombre']} {user['apellido']} ({user['cedula']}) -> "
+            f"{character['name']} : {vote}"
+        )
