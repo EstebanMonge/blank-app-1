@@ -3,22 +3,22 @@ import streamlit as st
 characters = {
     "subzero": {
         "name": "Sub Zero",
-        "image": "images/subzero.webp",
+        "image": "imagenes/subzero.webp",
         "votes": 0,
     },
     "johnnycage": {
         "name": "Johnny Cage",
-        "image": "images/johnnycage.webp",
+        "image": "imagenes/johnnycage.webp",
         "votes": 0,
     },
     "noobsaibot": {
         "name": "Noob Saibot",
-        "image": "images/noobsaibot.webp",
+        "image": "imagenes/noobsaibot.webp",
         "votes": 0,
     },
     "liukang": {
         "name": "Liu Kang",
-        "image": "images/liukang.webp",
+        "image": "imagenes/liukang.webp",
         "votes": 0,
     },
 }
