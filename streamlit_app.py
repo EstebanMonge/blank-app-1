@@ -56,38 +56,38 @@ if st.session_state.phase == "form":
     nombre = st.text_input("Nombre")
     apellido = st.text_input("Apellido")
 
-if st.button("Iniciar votación"):
+    if st.button("Iniciar votación"):
 
-    # 1. validar solo números
-    if not cedula.isdigit():
-        st.error("La cédula debe contener solo números.")
-        st.stop()
+        # 1. validar solo números
+        if not cedula.isdigit():
+            st.error("La cédula debe contener solo números.")
+            st.stop()
 
-    # 2. validar duplicados
-    existe = any(p["cedula"] == cedula for p in st.session_state.personas)
+        # 2. validar duplicados
+        existe = any(p["cedula"] == cedula for p in st.session_state.personas)
 
-    if existe:
-        st.error("Esta cédula ya votó anteriormente.")
-        st.stop()
+        if existe:
+            st.error("Esta cédula ya votó anteriormente.")
+            st.stop()
 
-    # 3. validar campos vacíos
-    if cedula and nombre and apellido:
+        # 3. validar campos vacíos
+        if cedula and nombre and apellido:
 
-        persona = {
-            "cedula": cedula,
-            "nombre": nombre,
-            "apellido": apellido,
-        }
+            persona = {
+                "cedula": cedula,
+                "nombre": nombre,
+                "apellido": apellido,
+            }
 
-        st.session_state.personas.append(persona)
-        st.session_state.current_persona = persona
+            st.session_state.personas.append(persona)
+            st.session_state.current_persona = persona
 
-        st.session_state.current_index = 0
-        st.session_state.results = {}
+            st.session_state.current_index = 0
+            st.session_state.results = {}
 
-        st.session_state.phase = "voting"
+            st.session_state.phase = "voting"
 
-        st.rerun()
+            st.rerun()
 
     else:
         st.warning("Completa todos los campos")
