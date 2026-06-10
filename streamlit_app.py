@@ -24,7 +24,7 @@ characters = {
 }
 
 # -----------------------------
-# MEMORIA DE PERSONAS
+# SESSION STATE
 # -----------------------------
 if "personas" not in st.session_state:
     st.session_state.personas = []
@@ -38,15 +38,17 @@ if "current_index" not in st.session_state:
 if "results" not in st.session_state:
     st.session_state.results = {}
 
-st.title("Votappcion")
-st.write("Bienvenido a Votappcion la aplicación para escoger al mejor")
+if "phase" not in st.session_state:
+    st.session_state.phase = "form"
 
 keys = list(characters.keys())
 
+st.title("Votappcion")
+
 # -----------------------------
-# FORMULARIO DE PERSONA
+# FORMULARIO
 # -----------------------------
-if st.session_state.current_persona is None:
+if st.session_state.phase == "form":
 
     st.write("Ingresa tus datos")
 
@@ -64,24 +66,20 @@ if st.session_state.current_persona is None:
                 "apellido": apellido,
             }
 
-            # guardar en variable personas (como pediste)
             st.session_state.personas.append(persona)
-
             st.session_state.current_persona = persona
 
-            # RESET IMPORTANTE para evitar el bug que tenías
             st.session_state.current_index = 0
             st.session_state.results = {}
 
-            st.rerun()
+            st.session_state.phase = "voting"
 
-        else:
-            st.warning("Completa todos los campos")
+            st.rerun()
 
 # -----------------------------
 # VOTACIÓN
 # -----------------------------
-else:
+elif st.session_state.phase == "voting":
 
     if st.session_state.current_index < len(keys):
 
@@ -111,14 +109,21 @@ else:
 
     else:
 
-        st.success("Ya votaste por todos los personajes.")
+        st.session_state.phase = "done"
+        st.rerun()
 
-        if st.button("Ver resultados"):
-            st.write("### Persona actual")
-            st.write(st.session_state.current_persona)
+# -----------------------------
+# FINAL
+# -----------------------------
+elif st.session_state.phase == "done":
 
-            st.write("### Todas las personas")
-            st.write(st.session_state.personas)
+    st.success("Gracias por votar 🙌")
 
-            st.write("### Votos")
-            st.write(st.session_state.results)
+    if st.button("Siguiente votante"):
+
+        st.session_state.current_persona = None
+        st.session_state.current_index = 0
+        st.session_state.results = {}
+        st.session_state.phase = "form"
+
+        st.rerun()
