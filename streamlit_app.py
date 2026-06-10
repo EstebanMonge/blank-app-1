@@ -23,13 +23,14 @@ characters = {
     },
 }
 
-# NUEVO: almacenamiento de personas (similar a characters)
-if "voters" not in st.session_state:
-    st.session_state.voters = {}
+# -----------------------------
+# MEMORIA DE PERSONAS
+# -----------------------------
+if "personas" not in st.session_state:
+    st.session_state.personas = []
 
-# NUEVO: datos del votante actual
-if "current_voter" not in st.session_state:
-    st.session_state.current_voter = None
+if "current_persona" not in st.session_state:
+    st.session_state.current_persona = None
 
 if "current_index" not in st.session_state:
     st.session_state.current_index = 0
@@ -40,10 +41,12 @@ if "results" not in st.session_state:
 st.title("Votappcion")
 st.write("Bienvenido a Votappcion la aplicación para escoger al mejor")
 
+keys = list(characters.keys())
+
 # -----------------------------
 # FORMULARIO DE PERSONA
 # -----------------------------
-if st.session_state.current_voter is None:
+if st.session_state.current_persona is None:
 
     st.write("Ingresa tus datos")
 
@@ -52,26 +55,33 @@ if st.session_state.current_voter is None:
     apellido = st.text_input("Apellido")
 
     if st.button("Iniciar votación"):
+
         if cedula and nombre and apellido:
 
-            # guardar persona en variable tipo diccionario
-            st.session_state.current_voter = {
+            persona = {
                 "cedula": cedula,
                 "nombre": nombre,
                 "apellido": apellido,
             }
 
-            # guardar en lista general (similar a characters structure)
-            st.session_state.voters[cedula] = st.session_state.current_voter
+            # guardar en variable personas (como pediste)
+            st.session_state.personas.append(persona)
+
+            st.session_state.current_persona = persona
+
+            # RESET IMPORTANTE para evitar el bug que tenías
+            st.session_state.current_index = 0
+            st.session_state.results = {}
 
             st.rerun()
 
         else:
             st.warning("Completa todos los campos")
 
+# -----------------------------
+# VOTACIÓN
+# -----------------------------
 else:
-
-    keys = list(characters.keys())
 
     if st.session_state.current_index < len(keys):
 
@@ -79,10 +89,9 @@ else:
         current_character = characters[current_key]
 
         st.write(
-            f"Votando: {st.session_state.current_voter['nombre']} {st.session_state.current_voter['apellido']}"
+            f"Votando: {st.session_state.current_persona['nombre']} {st.session_state.current_persona['apellido']}"
         )
 
-        st.write("¿Vota por?")
         st.subheader(current_character["name"])
         st.image(current_character["image"])
 
@@ -101,11 +110,15 @@ else:
                 st.rerun()
 
     else:
+
         st.success("Ya votaste por todos los personajes.")
 
         if st.button("Ver resultados"):
-            st.write("### Votante:")
-            st.write(st.session_state.current_voter)
+            st.write("### Persona actual")
+            st.write(st.session_state.current_persona)
 
-            st.write("### Votos:")
+            st.write("### Todas las personas")
+            st.write(st.session_state.personas)
+
+            st.write("### Votos")
             st.write(st.session_state.results)
