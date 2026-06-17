@@ -1,16 +1,17 @@
 import streamlit as st
+
 st.markdown("""
 <style>
-div.stButton > button:first-child {
-    background-color: #28a745;
-    color: white;
-    border-radius: 8px;
+/* Botón SI (verde) */
+button[data-testid="baseButton"][key="btn_si"] {
+    background-color: #28a745 !important;
+    color: white !important;
 }
 
-div.stButton:nth-child(2) > button {
-    background-color: #dc3545;
-    color: white;
-    border-radius: 8px;
+/* Botón NO (rojo) */
+button[data-testid="baseButton"][key="btn_no"] {
+    background-color: #dc3545 !important;
+    color: white !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -135,13 +136,13 @@ elif st.session_state.phase == "voting":
         col1, col2 = st.columns(2)
 
         with col1:
-            if st.button("Sí"):
+            if st.button("Sí", key="btn_si"):
                 st.session_state.results[current_key] = True
                 st.session_state.current_index += 1
                 st.rerun()
 
         with col2:
-            if st.button("No"):
+            if st.button("No", key="btn_no"):
                 st.session_state.results[current_key] = False
                 st.session_state.current_index += 1
                 st.rerun()
