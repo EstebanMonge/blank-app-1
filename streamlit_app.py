@@ -158,21 +158,6 @@ elif st.session_state.phase == "results":
         st.session_state.phase = "form"
         st.rerun()
 # -----------------------------
-# RESULTADOS
-# -----------------------------
-elif st.session_state.phase == "results":
-
-    st.header("Resultados de la votación")
-
-    for key, character in st.session_state.characters.items():
-        st.write(
-            f"{character['name']}: {character['votes']} votos"
-        )
-
-    if st.button("Volver"):
-        st.session_state.phase = "form"
-        st.rerun()
-# -----------------------------
 # VOTANTES
 # -----------------------------
 elif st.session_state.phase == "voters":
