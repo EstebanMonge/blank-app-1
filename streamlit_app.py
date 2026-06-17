@@ -1,5 +1,6 @@
 import streamlit as st
 
+codigo="Garbanzo"
 if "characters" not in st.session_state:
     st.session_state.characters = {
         "subzero": {
@@ -96,7 +97,13 @@ if st.session_state.phase == "form":
             st.rerun()
     st.divider()
 
+    garbanzo_input = st.text_input("Código de acceso (garbanzo)", type="password")
     if st.button("Ver resultados"):
+
+        if garbanzo_input != codigo:
+            st.error("Código incorrecto.")
+            st.stop()
+
         st.session_state.phase = "results"
         st.rerun()
 
