@@ -100,6 +100,10 @@ if st.session_state.phase == "form":
     garbanzo_input = st.text_input("Código de acceso:", type="password")
     if st.button("Ver resultados"):
 
+        if not garbanzo_input:
+            st.error("Ingresa el código.")
+            st.stop()
+
         if garbanzo_input != codigo:
             st.error("Código incorrecto.")
             st.stop()
@@ -159,6 +163,26 @@ elif st.session_state.phase == "results":
         )
     if st.button("Ver votantes"):
         st.session_state.phase = "voters"
+        st.rerun()
+
+    if st.button("Borrar resultados"):
+
+        # reset votos
+        for key in st.session_state.characters:
+            st.session_state.characters[key]["votes"] = 0
+
+        # reset votantes
+        st.session_state.personas = []
+
+        # reset resultados
+        st.session_state.results = {}
+
+        # reset flujo
+        st.session_state.current_persona = None
+        st.session_state.current_index = 0
+        st.session_state.phase = "form"
+
+        st.success("Sistema reiniciado correctamente.")
         st.rerun()
 
     if st.button("Volver"):
