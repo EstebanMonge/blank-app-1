@@ -175,7 +175,7 @@ elif st.session_state.phase == "results":
 # -----------------------------
 # VOTANTES
 # -----------------------------
- elif st.session_state.phase == "voters":
+elif st.session_state.phase == "voters":
 
     st.header("Lista de votantes")
 
