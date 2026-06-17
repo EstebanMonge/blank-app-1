@@ -150,6 +150,9 @@ elif st.session_state.phase == "results":
         st.write(
             f"{character['name']}: {character['votes']} votos"
         )
+    if st.button("Ver votantes"):
+        st.session_state.phase = "voters"
+        st.rerun()
 
     if st.button("Volver"):
         st.session_state.phase = "form"
@@ -169,7 +172,22 @@ elif st.session_state.phase == "results":
     if st.button("Volver"):
         st.session_state.phase = "form"
         st.rerun()
-        
+# -----------------------------
+# VOTANTES
+# -----------------------------
+ elif st.session_state.phase == "voters":
+
+    st.header("Lista de votantes")
+
+    if not st.session_state.personas:
+        st.info("No hay votantes aún.")
+    else:
+        for p in st.session_state.personas:
+            st.write(f"{p['cedula']} - {p['nombre']} {p['apellido']}")
+
+    if st.button("Volver a resultados"):
+        st.session_state.phase = "results"
+        st.rerun()       
 # -----------------------------
 # FINAL
 # -----------------------------
