@@ -1,21 +1,5 @@
 import streamlit as st
 
-st.markdown("""
-<style>
-/* Botón SI (verde) */
-button[data-testid="baseButton"][key="btn_si"] {
-    background-color: #28a745 !important;
-    color: white !important;
-}
-
-/* Botón NO (rojo) */
-button[data-testid="baseButton"][key="btn_no"] {
-    background-color: #dc3545 !important;
-    color: white !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
 if "characters" not in st.session_state:
     st.session_state.characters = {
         "subzero": {
@@ -136,13 +120,13 @@ elif st.session_state.phase == "voting":
         col1, col2 = st.columns(2)
 
         with col1:
-            if st.button("Sí", key="btn_si"):
+            if st.button("Sí", type="primary"):
                 st.session_state.results[current_key] = True
                 st.session_state.current_index += 1
                 st.rerun()
 
         with col2:
-            if st.button("No", key="btn_no"):
+            if st.button("No", type="secondary"):
                 st.session_state.results[current_key] = False
                 st.session_state.current_index += 1
                 st.rerun()
