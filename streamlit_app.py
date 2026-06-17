@@ -1,27 +1,30 @@
 import streamlit as st
 
-characters = {
-    "subzero": {
-        "name": "Sub Zero",
-        "image": "imagenes/subzero.webp",
-        "votes": 0,
-    },
-    "johnnycage": {
-        "name": "Johnny Cage",
-        "image": "imagenes/johnnycage.webp",
-        "votes": 0,
-    },
-    "noobsaibot": {
-        "name": "Noob Saibot",
-        "image": "imagenes/noobsaibot.webp",
-        "votes": 0,
-    },
-    "liukang": {
-        "name": "Liu Kang",
-        "image": "imagenes/liukang.webp",
-        "votes": 0,
-    },
-}
+if "characters" not in st.session_state:
+    st.session_state.characters = {
+        "subzero": {
+            "name": "Sub Zero",
+            "image": "imagenes/subzero.webp",
+            "votes": 0,
+        },
+        "johnnycage": {
+            "name": "Johnny Cage",
+            "image": "imagenes/johnnycage.webp",
+            "votes": 0,
+        },
+        "noobsaibot": {
+            "name": "Noob Saibot",
+            "image": "imagenes/noobsaibot.webp",
+            "votes": 0,
+        },
+        "liukang": {
+            "name": "Liu Kang",
+            "image": "imagenes/liukang.webp",
+            "votes": 0,
+        },
+    }
+
+characters = st.session_state.characters
 
 # -----------------------------
 # SESSION STATE
@@ -58,7 +61,10 @@ if st.session_state.phase == "form":
 
     if st.button("Iniciar votación"):
 
-        # 1. validar solo números
+        if not cedula or not nombre or not apellido:
+            st.error("Completa todos los campos.")
+            st.stop()
+
         if not cedula.isdigit():
             st.error("La cédula debe contener solo números.")
             st.stop()
@@ -88,9 +94,12 @@ if st.session_state.phase == "form":
             st.session_state.phase = "voting"
 
             st.rerun()
+    st.divider()
 
-    else:
-        st.warning("Completa todos los campos")
+    if st.button("Ver resultados"):
+        st.session_state.phase = "results"
+        st.rerun()
+
 # -----------------------------
 # VOTACIÓN
 # -----------------------------
@@ -124,9 +133,43 @@ elif st.session_state.phase == "voting":
 
     else:
 
+        for personaje, voto in st.session_state.results.items():
+            if voto:
+                st.session_state.characters[personaje]["votes"] += 1
+
         st.session_state.phase = "done"
         st.rerun()
+# -----------------------------
+# RESULTADOS
+# -----------------------------
+elif st.session_state.phase == "results":
 
+    st.header("Resultados de la votación")
+
+    for key, character in st.session_state.characters.items():
+        st.write(
+            f"{character['name']}: {character['votes']} votos"
+        )
+
+    if st.button("Volver"):
+        st.session_state.phase = "form"
+        st.rerun()
+# -----------------------------
+# RESULTADOS
+# -----------------------------
+elif st.session_state.phase == "results":
+
+    st.header("Resultados de la votación")
+
+    for key, character in st.session_state.characters.items():
+        st.write(
+            f"{character['name']}: {character['votes']} votos"
+        )
+
+    if st.button("Volver"):
+        st.session_state.phase = "form"
+        st.rerun()
+        
 # -----------------------------
 # FINAL
 # -----------------------------
