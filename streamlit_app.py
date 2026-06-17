@@ -97,7 +97,7 @@ if st.session_state.phase == "form":
             st.rerun()
     st.divider()
 
-    garbanzo_input = st.text_input("Código de acceso (garbanzo)", type="password")
+    garbanzo_input = st.text_input("Código de acceso:", type="password")
     if st.button("Ver resultados"):
 
         if garbanzo_input != codigo:
