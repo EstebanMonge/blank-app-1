@@ -120,13 +120,13 @@ elif st.session_state.phase == "voting":
         col1, col2 = st.columns(2)
 
         with col1:
-            if st.button("Sí"):
+            if st.button("Sí", type="primary"):
                 st.session_state.results[current_key] = True
                 st.session_state.current_index += 1
                 st.rerun()
 
         with col2:
-            if st.button("No"):
+            if st.button("No", type="secondary"):
                 st.session_state.results[current_key] = False
                 st.session_state.current_index += 1
                 st.rerun()
@@ -176,6 +176,7 @@ elif st.session_state.phase == "results":
 elif st.session_state.phase == "done":
 
     st.success("Gracias por votar")
+    st.balloons()
 
     if st.button("Siguiente votante"):
 
