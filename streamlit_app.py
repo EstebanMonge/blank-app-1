@@ -28,7 +28,7 @@ if "characters" not in st.session_state:
 characters = st.session_state.characters
 
 # -----------------------------
-# SESSION STATE
+# ESTADO DE SESION
 # -----------------------------
 if "personas" not in st.session_state:
     st.session_state.personas = []
@@ -184,7 +184,7 @@ elif st.session_state.phase == "results":
 
         st.success("Sistema reiniciado correctamente.")
         st.rerun()
-
+        
     if st.button("Volver"):
         st.session_state.phase = "form"
         st.rerun()
